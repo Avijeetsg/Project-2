@@ -1,0 +1,143 @@
+import tkinter
+import math
+
+# Function to handle button and keyboard input
+def click(val):
+    e = entry.get()
+    ans = ""
+
+    try:
+        if val == "C":
+            e = e[0:-1]
+            entry.delete(0, "end")
+            entry.insert(0, e)
+            return
+
+        elif val == "CE":
+            entry.delete(0, "end")
+
+        elif val == "√":
+            ans = math.sqrt(eval(e))
+
+        elif val == "π":
+            ans = math.pi
+
+        elif val == "cosθ":
+            ans = math.cos(math.radians(eval(e)))
+
+        elif val == "sinθ":
+            ans = math.sin(math.radians(eval(e)))
+
+        elif val == "tanθ":
+            ans = math.tan(math.radians(eval(e)))
+
+        elif val == "2π":
+            ans = 2 * math.pi
+
+        elif val == "cosh":
+            ans = math.cosh(eval(e))
+
+        elif val == "sinh":
+            ans = math.sinh(eval(e))
+
+        elif val == "tanh":
+            ans = math.tanh(eval(e))
+
+        elif val == chr(8731):  # ∛
+            ans = eval(e) ** (1 / 3)
+
+        elif val == "x\u02b8":  # xʸ
+            entry.insert("end", "**")
+            return
+
+        elif val == "x\u00B3":  # x³
+            ans = eval(e) ** 3
+
+        elif val == "x\u00B2":  # x²
+            ans = eval(e) ** 2
+
+        elif val == "ln":
+            ans = math.log(eval(e))  # Natural log
+
+        elif val == "deg":
+            ans = math.degrees(eval(e))
+
+        elif val == "rad":
+            ans = math.radians(eval(e))
+
+        elif val == "e":
+            ans = math.e
+
+        elif val == "log10":
+            ans = math.log10(eval(e))
+
+        elif val == "x!":
+            ans = math.factorial(int(eval(e)))
+
+        elif val == chr(247):  # ÷
+            entry.insert("end", "/")
+            return
+
+        elif val == "%":
+            ans = eval(e) / 100
+
+        elif val == "=":
+            ans = eval(e)
+
+        else:
+            entry.insert("end", val)
+            return
+
+        entry.delete(0, "end")
+        entry.insert(0, ans)
+
+    except Exception:
+        entry.delete(0, "end")
+        entry.insert(0, "Error")
+
+
+# Function to handle keyboard input
+def key_event(event):
+    key = event.char
+    if key in '0123456789+-*/().%':
+        click(key)
+    elif key == '\r':  # Enter key
+        click("=")
+    elif key == '\x08':  # Backspace
+        click("C")
+
+
+# GUI Setup
+root = tkinter.Tk()
+root.title("Avis' CALCULATOR")
+root.geometry("680x486+100+100")
+root.config(bg="black")
+
+# Entry field
+entry = tkinter.Entry(root, font=("typewritter", 20, "bold"), bg="black", fg="white", bd=10, width=30)
+entry.grid(row=0, column=0, columnspan=8)
+
+# Bind key events to entry and root
+entry.bind("<Key>", key_event)
+root.bind("<Key>", key_event)
+
+# Buttons
+button_list = [
+    "C", "CE", "√", "+", "π", "cosθ", "tanθ", "sinθ",
+    "1", "2", "3", "-", "2π", "cosh", "tanh", "sinh",
+    "4", "5", "6", "*", chr(8731), "x\u02b8", "x\u00B3", "x\u00B2",
+    "7", "8", "9", chr(247), "ln", "deg", "rad", "e",
+    "0", ".", "%", "=", "log10", "(", ")", "x!"
+]
+
+r, c = 1, 0
+for i in button_list:
+    button = tkinter.Button(root, width=5, height=2, bd=2, text=i, bg="grey", fg="black",
+                            font=("arial", 18, "bold"), command=lambda button=i: click(button))
+    button.grid(row=r, column=c, pady=1)
+    c += 1
+    if c > 7:
+        r += 1
+        c = 0
+
+root.mainloop()
